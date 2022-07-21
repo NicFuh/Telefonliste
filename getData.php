@@ -8,8 +8,6 @@
 <body>
     <?php
 
-    $workerArray = array();
-
     class Mitarbeiter {
         public $id;
         public $gender;
@@ -63,25 +61,37 @@
         $sql = "SELECT * from telefonliste.panel";
         $result = $mysqli->query($sql);
 
+        $workerArray = array();
+
         if ($result->num_rows > 0){
-            $i = 0;
+            
             while($row = $result->fetch_assoc()) {
                 //echo "id: " . $row["id"] . " |Gender: " . $row["gender"] . "|Person: " . $row["person"] . " |FA: " . $row["fa"] . "|Status: " . $row["status"] . " |Perso_nr: " . $row["perso_nr"] . " |vorname: " . $row["vorname"] . "|abteilung: " . $row["abteilung"] . " |telBüro: " . $row["telefonBuero"] . " |telMobil: " . $row["telefonMobil"] . "|email: " . $row["email"] . " |az_soll: " . $row["az_soll"] . "|pause_soll: " . $row["pause_soll"] . " |anzeige: " . $row["anzeige"];
                 $mitarbeiter = new Mitarbeiter($row["id"], $row["gender"], $row["person"], $row["fa"], $row["gf"], $row["status"], $row["perso_nr"], $row["vorname"], $row["abteilung"], $row["telefonBuero"], $row["telefonMobil"], $row["email"], $row["az_soll"], $row["pause_soll"], $row["anzeige"]);
-                $workerArray[$i] = $mitarbeiter;
-                $i++;
+                
+                array_push($workerArray, $mitarbeiter);
             }
         }else{
             echo "0 results";
         }
 
-        
+        echo sizeof($workerArray);
 
         $mysqli->close();
         
-        $TESTmitarbeiter = new Mitarbeiter(1, "gender", "person", "fa", "gf", 1, "perso_nr", "vorname", "abteilung", "telefonBuero", "telefonMobil", "email", "az_soll", "pause_soll", 1);
 
-        echo json_encode($TESTmitarbeiter);
+        $TESTarray = array();
+        for ($i=0; $i < 88; $i++) { 
+            $TESTmitarbeiter = new Mitarbeiter(10, "Hr.", "Schumacher", "_AT", "0", 0, "", "Oliver", "Geschäftsführung", "162", "0163/7019340", "", "08:00:00", "01:00:00", 1);
+            array_push($TESTarray, $TESTmitarbeiter);
+        }
+        
+        $json = json_encode($TESTarray);
+
+        if (file_put_contents("data.json", $json))
+            echo "JSON file created successfully";
+        else
+            echo "Error"
 
 
     ?>
